@@ -24,6 +24,8 @@ const getNLPCaps = (caps) => {
   result.DIALOGFLOW_PROJECT_ID = caps.DIALOGFLOW_NLP_PROJECT_ID
   result.DIALOGFLOW_CLIENT_EMAIL = caps.DIALOGFLOW_NLP_CLIENT_EMAIL
   result.DIALOGFLOW_PRIVATE_KEY = caps.DIALOGFLOW_NLP_PRIVATE_KEY
+  result.DIALOGFLOW_TIER = caps.DIALOGFLOW_NLP_TIER
+  result.DIALOGFLOW_TZ = caps.DIALOGFLOW_NLP_TZ
   return result
 }
 
@@ -100,7 +102,7 @@ const trainIntentUtterances = async ({ caps }, intents, { origAgentInfo }) => {
     const newAgentData = {
       parent: projectPathNLP,
       enableLogging: true,
-      timeZone: 'Europe/Madrid'
+      timeZone: nlpContainer.pluginInstance.caps.DIALOGFLOW_TZ
     }
     if (origAgentInfo) {
       Object.assign(newAgentData, {
@@ -108,12 +110,14 @@ const trainIntentUtterances = async ({ caps }, intents, { origAgentInfo }) => {
         defaultLanguageCode: origAgentInfo.defaultLanguageCode,
         timeZone: origAgentInfo.timeZone,
         matchMode: origAgentInfo.matchMode,
-        classificationThreshold: origAgentInfo.classificationThreshold
+        classificationThreshold: origAgentInfo.classificationThreshold,
+        tier: origAgentInfo.tier
       })
     } else {
       Object.assign(newAgentData, {
         displayName: `BotiumTrainingCopy-${randomize('Aa0', 5)}`,
-        defaultLanguageCode: nlpContainer.pluginInstance.caps.DIALOGFLOW_LANGUAGE_CODE
+        defaultLanguageCode: nlpContainer.pluginInstance.caps.DIALOGFLOW_LANGUAGE_CODE,
+        tier: nlpContainer.pluginInstance.caps.DIALOGFLOW_TIER
       })
     }
 
